@@ -1,0 +1,51 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: fmt + clippy + build + test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        # The only Rust project is the napi addon crate; everything else here
+        # (docs, the future chassis) is not cargo-built.
+        working-directory: kernel-addon
+    steps:
+      - uses: actions/checkout@v4
+
+      # kernel-addon/rust-toolchain.toml pins the channel (1.92.0) + rustfmt/clippy
+      # components; rustup installs it on first cargo invocation.
+      - name: Show toolchain
+        run: rustup show
+
+      - name: Format check
+        run: cargo fmt --all --check
+
+      # Default features: the pure Rust core + the napi-free `wire` boundary.
+      - name: Clippy (deny warnings)
+        run: cargo clippy --all-targets --locked -- -D warnings
+
+      # The opt-in napi surface (src/napi_api.rs). clippy checks it (no linking),
+      # so the `#[napi]` delegators are covered even though `cargo test` can't
+      # link a napi test executable (Node supplies the symbols at load time).
+      - name: Clippy (napi surface, deny warnings)
+        run: cargo clippy --all-targets --features napi --locked -- -D warnings
+
+      - name: Build
+        run: cargo build --locked
+
+      # Runs the 22-test suite, including the golden determinism gate
+      # (composition::golden_hashes_are_stable). Default features only: a napi
+      # crate cannot link a test executable, so the addon surface is not tested
+      # here (it is clippy-checked above and exercised at chassis integration).
+      - name: Test
+        run: cargo test --locked

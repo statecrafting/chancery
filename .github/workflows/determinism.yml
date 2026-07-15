@@ -1,0 +1,41 @@
+name: determinism
+
+# The chancery kernel's value is a verifiable core: the same send context must
+# produce the same gate config hash and the same ledger record hash on every
+# platform. This gate runs the composition determinism proofs
+# (composition::golden_hashes_are_stable and its siblings, which pin the two
+# hashes) across Linux, macOS, and Windows to prove "same inputs, same hash,
+# everywhere". A drift here is either an intended semantics change (update the
+# GOLDEN_* constants deliberately) or an accidental byte-level regression.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  merge_group:
+
+concurrency:
+  group: determinism-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  golden:
+    name: golden hashes
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: kernel-addon
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: rustup show
+
+      # Pure Rust core, default features (napi off): the composed hashing is
+      # host-independent, so the pinned hashes must match on all three OSes.
+      - name: Golden determinism gate
+        run: cargo test --locked --test composition
