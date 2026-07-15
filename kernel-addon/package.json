@@ -1,0 +1,37 @@
+{
+  "name": "@chancery/kernel-native",
+  "version": "0.1.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stagecraft-ing/chancery.git",
+    "directory": "kernel-addon"
+  },
+  "spec-spine": { "spec": "020-chancery-kernel" },
+  "description": "chancery's governance kernel as a napi-rs native addon: message-decision gating (action-gate), a signed decision ledger (attest-ledger), and a play-scoped autonomy ladder (trust-window), exposed to the enrahitu Encore.ts app.",
+  "type": "commonjs",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": { "node": ">=24" },
+  "files": [
+    "index.js",
+    "index.d.ts"
+  ],
+  "napi": {
+    "binaryName": "chancery-kernel",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu"
+    ]
+  },
+  "scripts": {
+    "build": "napi build --platform --release --features napi",
+    "build:debug": "napi build --platform --features napi",
+    "create-npm-dirs": "napi create-npm-dirs",
+    "artifacts": "napi artifacts"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "3.1.5"
+  }
+}

@@ -1,0 +1,54 @@
+# chancery-kernel: the governance kernel for the chancery message-decision
+# engine. Composes the four extracted Apache-2.0 primitives (action-gate,
+# attest-ledger, trust-window, canonical-keysort-json) into message-send
+# gating, a signed decision ledger, and a play-scoped autonomy ladder.
+#
+# Built two ways:
+#   - default (`napi` feature on): the napi-rs cdylib addon the enrahitu
+#     Encore.ts app loads in-process, sibling to the chassis hiqlite addon.
+#   - `--no-default-features`: the pure Rust core alone, for fast, host-only
+#     testing of the composition and its determinism.
+[package]
+name = "chancery-kernel"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+publish = false
+description = "chancery governance kernel: message-decision gating, a signed decision ledger, and a play-scoped autonomy ladder over action-gate, attest-ledger, trust-window and canonical-keysort-json."
+
+[package.metadata.spec-spine]
+# Placeholder; the chancery domain spec for the kernel is authored in WU-F.
+spec = "020-chancery-kernel"
+
+[lib]
+# `cdylib` for the napi addon; `rlib` so `cargo test` and any Rust consumer can
+# link the crate directly.
+crate-type = ["cdylib", "rlib"]
+
+[features]
+# Off by default so `cargo test` builds the pure core + the (napi-free) `wire`
+# boundary and runs cleanly. A napi crate cannot link a test executable (the
+# Node-API symbols are supplied by the Node process at load time, not at link
+# time), so the addon surface is opt-in and built explicitly with
+# `--features napi` (the `napi build` script passes it).
+default = []
+# The napi-rs addon surface (src/napi_api.rs): thin `#[napi]` delegators over the
+# `wire` module, exposing the kernel to the enrahitu Encore.ts app.
+napi = ["dep:napi", "dep:napi-derive"]
+
+[dependencies]
+action-gate-core = { version = "0.1", features = ["checks-common"] }
+attest-ledger-core = "0.1"
+trust-window = "0.1"
+canonical-keysort-json = "0.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+napi = { version = "3", default-features = false, features = ["napi8"], optional = true }
+napi-derive = { version = "3", optional = true }
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = true
+strip = true
