@@ -13,7 +13,7 @@
 ## A. Template rebase (what changed, and why)
 
 C0 is now built on the **`enrahitu`** chassis (`~/DevWork/enrahitu`,
-`stagecraft-ing/enrahitu`): **En**core.ts + **ra**uthy + **hi**qlite +
+`statecrafting/enrahitu`): **En**core.ts + **ra**uthy + **hi**qlite +
 **Tu**rso/libSQL. One Docker image + one volume = a complete authenticated
 app, zero managed-infrastructure dependencies. This **supersedes the
 `preliminary/04` deployment design** on several load-bearing points:
@@ -203,8 +203,8 @@ integration) follow B. **WU-E** closes over all. **WU-F** (domain specs) last.
 ### WU-A: stamp the enrahitu skeleton for chancery
 
 - Bring the enrahitu chassis into the (near-empty) chancery repo. Two paths:
-  **(a) Stagecraft factory stamp** (`template.toml` slots: `app_name=chancery`,
-  `org=stagecraft-ing`, `frontend=vue`) which also emits the `.stagecraft/
+  **(a) Statecraft factory stamp** (`template.toml` slots: `app_name=chancery`,
+  `org=statecrafting`, `frontend=vue`) which also emits the `.statecraft/
   born-with.json` provenance cert (spec 012); or **(b) manual chassis copy**
   into the existing repo. Recommend (a) if the factory stamp path is ready,
   since it yields the born-with cert for free; else (b). **Open decision (§6).**
@@ -375,7 +375,7 @@ WU-F  chancery domain specs (graduate governance)
 
 ## 6. Open decisions
 
-1. **WU-A stamp path:** Stagecraft factory stamp (yields the born-with cert)
+1. **WU-A stamp path:** Statecraft factory stamp (yields the born-with cert)
    vs manual chassis copy into the existing chancery repo. Recommend the
    factory stamp if that path is ready.
 2. **Addon boundary confirmation:** the addon is stateless pure compute; TS

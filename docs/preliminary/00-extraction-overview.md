@@ -74,7 +74,7 @@ available, but it re-imports OAP's framing into a domain-neutral library.
 
 ## The four libraries (DECIDED)
 
-Four standalone repos in the `stagecraft-ing/*` org, **Apache-2.0**, edition
+Four standalone repos in the `statecrafting/*` org, **Apache-2.0**, edition
 2024, self-governed by their own `specs/` corpus compiled by a pinned
 `spec-spine` (the tenant-emit / tenant-tail dogfooding pattern). Crate count
 per repo follows need: the CLI-bearing libraries use the three-crate

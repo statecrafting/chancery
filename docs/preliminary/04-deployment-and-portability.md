@@ -23,7 +23,7 @@
    (`platform/CLAUDE.md` still says Azure AKS); do not inherit that drift,
    document Hetzner-K3s-plus-portable as the real posture.
 3. **Platform-level for now, tenant-pivot preserved.** chancery is a shared
-   control plane (one deployment governing many founders), like stagecraft /
+   control plane (one deployment governing many founders), like statecraft /
    deployd-api-rs, not a per-tenant app. The open-core / private-config
    boundary is drawn so a later pivot to per-tenant deployment is a
    packaging change, not a rewrite (it would add a `TenantShape` + chart +
@@ -42,7 +42,7 @@ Terraform modules (per cloud, swappable)     Helm charts (cloud-neutral)
 ```
 
 The two chancery services (from Part 2 of the architecture discussion):
-- `conv-api`: Encore.ts modular monolith (stagecraft-shaped) with an
+- `conv-api`: Encore.ts modular monolith (statecraft-shaped) with an
   embedded React Router v7 SSR review UI; async/outbox on NSQ (Encore
   self-hosted pubsub, already on the cluster).
 - `conv-kernel`: Rust axum service (deployd-api-rs-shaped) hosting the
